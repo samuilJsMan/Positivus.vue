@@ -17,11 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import { useDisplay } from "vuetify";
-import { computed, defineProps } from "vue";
+import { computed, defineProps,inject } from "vue";
 
-const props = defineProps([`title`]);
-const display = useDisplay();
+defineProps([`title`]);
+const display:any=inject(`display`)
 
 const computeClass = computed(() => {
   if (display.width.value < 700) {
@@ -32,32 +31,28 @@ const computeClass = computed(() => {
 </script>
 
 <style lang="scss">
-.sectionHeader {
+.sectionHeader { 
   display: flex;
   align-items: center;
+  flex-wrap:wrap;
   .header {
-    width: fit-content;
+    text-align: center;
     h1 {
       display: inline;
-      text-align: center;
       background-color: #b9ff66;
       box-decoration-break: clone;
       padding: 5px 9px;
       border-radius: 7px;
-      font-size: 26.6667px;
+      font-size: 30px;
     }
+  }
+  p{
+    font-size: 15px;
   }
 }
 
 .modileSectionHeader {
-  margin-top: 60px;
-  margin-bottom: 30px;
-  flex-wrap:wrap;
-  justify-content: center;
-  align-items: center;
-  .header{
-    max-width: 240px;
-  }
+  justify-content: space-around;
   .description {
     margin-top: 30px;
     width:100%;
@@ -66,21 +61,9 @@ const computeClass = computed(() => {
 }
 
 .desktopSectionHeader {
-  margin-top: 80px;
-  margin-bottom: 60px;
-  .header{
-    height: fit-content;
-  }
   .description {
     margin-left: 30px;
-    overflow: hidden;
     max-width: 50%;
-    // display: -webkit-box;
-    // -webkit-line-clamp: 2;
-    // line-clamp: 2;
-    // -webkit-box-orient: vertical;
-    //width: 50%;
-    //min-width: 500px;
   }
 }
 </style>

@@ -2,6 +2,7 @@
   <div>
     <a :href="to||null" :style="{color:type}">
       {{ text }}
+      <slot></slot>
     </a>
   </div>
 </template>
@@ -12,7 +13,7 @@ const props=defineProps([`to`,`theme`,`text`])
 
 const type=computed(()=>{
   if(props.theme==`green`){
-    return `green`
+    return `#B9FF66`
   }else if(props.theme==`white`){
     return `white`
   }else if(props.theme==`black`){

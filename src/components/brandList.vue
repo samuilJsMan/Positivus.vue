@@ -1,32 +1,16 @@
 <template>
-  <section :class="[`brandList`,mobile ? `brandListDesktop` : `brandListMobile`]">
+  <div :class="[`brandList`,mobile ? `brandListDesktop` : `brandListMobile`]">
     <div class="spacer" style="width: 14.285%;"></div>
-    <div class="logoWrapper">
-      <img class="logo" :src="require(`../assets/Company logo1.png`)" alt="" />
+    <div v-for="n in 6" class="logoWrapper" :key="n">
+      <img class="logo" :src="require(`../assets/Company logo${n}.png`)" alt="" />
     </div>
-    <div class="logoWrapper">
-      <img class="logo" :src="require(`../assets/Company logo2.png`)" alt="" />
-    </div>
-    <div class="logoWrapper">
-      <img class="logo" :src="require(`../assets/Company logo3.png`)" alt="" />
-    </div>
-    <div class="logoWrapper">
-      <img class="logo" :src="require(`../assets/Company logo4.png`)" alt="" />
-    </div>
-    <div class="logoWrapper">
-      <img class="logo" :src="require(`../assets/Company logo5.png`)" alt="" />
-    </div>
-    <div class="logoWrapper">
-      <img class="logo" :src="require(`../assets/Company logo6.png`)" alt="" />
-    </div>
-  </section>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { useDisplay } from 'vuetify'
-import { computed } from 'vue'
+import { computed,inject  } from 'vue'
 
-const display=useDisplay()
+const display:any=inject(`display`)
 
 const mobile = computed(() => {
   if (display.width.value < 700) {
@@ -53,7 +37,6 @@ const mobile = computed(() => {
 
 .brandListDesktop {
   width: 100%;
-  margin-top: 50px;
   justify-content: space-between;
   .spacer{
     display: none;
@@ -64,7 +47,6 @@ const mobile = computed(() => {
   width: 120%;
   min-width: 440px;
   animation: 10s linear 0s infinite logoAnim;
-  margin-top: 35px;
   .logoWrapper {
     width: 28.57%;
   }
