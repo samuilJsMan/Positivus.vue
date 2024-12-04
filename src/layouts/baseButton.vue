@@ -26,7 +26,7 @@ const color=computed(()=>{
     height: 45px;
     width: fit-content;
     text-align: center;
-    border-radius: 9.333px;
+    border-radius: 10px;
     padding: 0 20px;
   }
   .bg-green-C{

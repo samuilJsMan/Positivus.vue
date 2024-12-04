@@ -4,12 +4,12 @@
       <form @submit.prevent class="form">
         <div class="formContainers radio">
           <label class="container" v-for="n in radioArray" :key="n.value"
-            ><p>{{n.text}}</p>
+            ><p>{{ n.text }}</p>
             <input
               type="radio"
               name="action"
               :checked="n.checked"
-              class="inp"
+              class="customInput"
               :value="n.value"
               v-model="providedData.action"
             />
@@ -34,8 +34,8 @@
             id="email"
             placeholder="Email"
             v-model="providedData.email.data"
-            @blur="blur(providedData.email,`email`)"
-            :ref="el=>providedData.email.tag=el"
+            @blur="blur(providedData.email, `email`)"
+            :ref="(el) => (providedData.email.tag = el)"
           />
         </div>
         <div class="formContainers">
@@ -46,91 +46,127 @@
             placeholder="Message"
             rows="7"
             v-model="providedData.message.data"
-            @blur="blur(providedData.message,`message`)"
-            :ref="el=>providedData.message.tag=el"
+            @blur="blur(providedData.message, `message`)"
+            :ref="(el) => (providedData.message.tag = el)"
           ></textarea>
         </div>
-        <div class="formContainers" v-if="computedWidth">
-          <baseButton
-            color="black"
-            style="width: 100%"
-            center="true"
-            @click="send"
-          >
-            Send Message
-          </baseButton>
-        </div>
+        <pendingButton
+          :isPending="isPending"
+          :send="send"
+          color="black"
+          buttonText="Send Message"
+          v-if="computedWidth"
+        ></pendingButton>
       </form>
       <div class="image" v-if="computedWidth">
         <img :src="require(`../assets/ContactUsIllustration.png`)" alt="" />
       </div>
+
+      <transition>
+        <MiniDialig
+          :values="value"
+          v-if="showDialog"
+        ></miniDialig>
+      </transition>
     </div>
-    <baseButton
-      color="black"
-      style="width: 100%; margin-top: 40px"
-      center="true"
-      v-if="!computedWidth"
-      @click="send"
-    >
-      Send Message
-    </baseButton>
+    <div v-if="!computedWidth" class="outsideButton">
+      <pendingButton :isPending="isPending" :send="send" color="black" buttonText="Send Message" ></pendingButton>
+    </div>
   </section>
 </template>
 
 <script lang="ts" setup>
 import { inject, computed, ref, reactive } from "vue";
+import pendingButton from "./pendingButton.vue";
+import MiniDialig from "@/layouts/miniDialig.vue";
 const display: any = inject(`display`);
+const isPending = ref(false);
 const providedData = reactive({
-  action: ``,
+  action: `greetengs`,
   name: ``,
-  email: { data: ``, valid: false ,tag:ref() },
-  message: { data: ``, valid: false ,tag:ref()},
+  email: { data: ``, valid: false, tag: ref() },
+  message: { data: ``, valid: false, tag: ref() },
 });
 
-const radioArray=[{text:`Say Hi`,value:`greetengs`,checked:true},{text:`Get a Quote`,value:`quote`}]
+const radioArray = [
+  { text: `Say Hi`, value: `greetengs`, checked: true },
+  { text: `Get a Quote`, value: `quote` },
+];
+
+const showDialog = ref(false);
+
 const computedWidth = computed(() => {
   return display.width.value >= 700;
 });
+const value = reactive({ status: ``, text: `` });
 
-
-function addRed(target:any){
-  target.valid=false
-  target.tag.classList.add(`redBorder`)
+function addRed(target: any) {
+  target.valid = false;
+  target.tag.classList.add(`redBorder`);
 }
 
-function removeRed(target:any){
-  target.valid=true
-  target.tag.classList.remove(`redBorder`)
+function removeRed(target: any) {
+  target.valid = true;
+  target.tag.classList.remove(`redBorder`);
 }
 
-function blur(target: any,selector:string) {
-  if (selector === `email`&&target.data.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) {/* eslint-disable-line */
-    removeRed(target)
+function blur(target: any, selector: string) {
+  if (
+    selector === `email` &&
+    target.data.match(
+      /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g /* eslint-disable-line */
+    )
+  ) {
+    removeRed(target);
   } else if (selector === `message` && target.data.length >= 10) {
-    removeRed(target)
-  }else{ 
-    addRed(target)
+    removeRed(target);
+  } else {
+    addRed(target);
   }
 }
 
 function send() {
+  blur(providedData.message, `message`)
+  blur(providedData.email, `email`)
   if (providedData.email.valid && providedData.message.valid) {
+    const object = {
+      name: providedData.name || null,
+      action: providedData.action,
+      email: providedData.email.data,
+      message: providedData.message.data,
+    };
+    isPending.value = true;
 
-    //fetchrequest
-
-    providedData.action = ``;
-    providedData.name = ``;
-    providedData.email.data = ``;
-    providedData.email.valid = false;
-    providedData.message.data = ``;
-    providedData.message.valid = false;
-  }else{
-    if(!providedData.email.valid){
-      addRed(providedData.email)
-    }
-    if(!providedData.message.valid){
-      addRed(providedData.message)
-    }
+    fetch(
+      `https://positivus-e2786-default-rtdb.europe-west1.firebasedatabase.app/requests.json`,
+      {
+        method: `POST`,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(object),
+      }
+    )
+      .then((responce) => responce.json())
+      .then(() => {
+        value.status = `Success`;
+        value.text = `Message was sended succesfully`;
+        providedData.action = `greetengs`;
+        providedData.name = ``;
+        providedData.email.data = ``;
+        providedData.email.valid = false;
+        providedData.message.data = ``;
+        providedData.message.valid = false;
+      })
+      .catch(() => {
+        value.status = `Error`;
+        value.text = `Please try send message later`;
+      })
+      .finally(() => {
+        isPending.value = false;
+        showDialog.value = true;
+        setTimeout(() => {
+          showDialog.value = false;
+        }, 2500);
+      });
   }
 }
 </script>
@@ -145,12 +181,16 @@ function send() {
   overflow: hidden;
   justify-content: space-between;
   gap: 45%;
+  position: relative;
   .form {
     min-width: 245px;
     width: 100%;
     gap: 30px;
     display: flex;
     flex-direction: column;
+    .redBorder {
+      border: 1px solid red !important;
+    }
     #name,
     #email,
     #message {
@@ -187,7 +227,33 @@ function send() {
     }
   }
 }
-.inp {
+.outsideButton {
+  margin-top: 30px;
+}
+.progressWrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: #191a23;
+  height: 45px;
+  border-radius: 10px;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: 0.3s;
+}
+.v-enter-to,
+.v-leave-from {
+  opacity: 1;
+}
+
+.customInput {
   position: absolute;
   top: 0;
   left: 0;
@@ -205,7 +271,7 @@ function send() {
   user-select: none;
 }
 
-.container .inp {
+.container .customInput {
   position: absolute;
   opacity: 0;
   cursor: pointer;
@@ -222,7 +288,7 @@ function send() {
   border: 1px solid black;
 }
 
-.container:hover .inp ~ .checkmark {
+.container:hover .customInput ~ .checkmark {
   background-color: #ccc;
 }
 
@@ -232,7 +298,7 @@ function send() {
   display: none;
 }
 
-.container .inp:checked ~ .checkmark::after {
+.container .customInput:checked ~ .checkmark::after {
   display: block;
 }
 
@@ -244,8 +310,4 @@ function send() {
   border-radius: 50%;
   background: #b9ff66;
 }
-.redBorder {
-  border: 1px solid red !important;
-}
-
 </style>

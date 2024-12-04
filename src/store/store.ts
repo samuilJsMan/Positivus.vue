@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import {ref} from 'vue'
 
 export default createStore({
   state: {
@@ -106,11 +107,11 @@ export default createStore({
       },
     ],
     navAnchorList: [
-      { to:"about",icon: `mdi-view-dashboard`, text: `About us` },
-      { to:"services",icon: `mdi-book`, text: `Services` },
-      { to:"cases",icon: `mdi-arrow-up-bold-box-outline`, text: `Use Cases` },
-      { to:"team",icon: `mdi-store`, text: `Team` },
-      { to:"blog",icon: `mdi-forum`, text: `Blog` },
+      { to:"about", text: `About us` },
+      { to:"services", text: `Services` },
+      { to:"cases", text: `Use Cases` },
+      { to:"team", text: `Team` },
+      { to:"blog", text: `Blog` },
     ],
     workingProccesDataArray: [
       {
@@ -163,7 +164,7 @@ export default createStore({
       { id:`contact`,
         title: `Contact Us`,
         text: `Connect with Us: Let's Discuss Your Digital Marketing      Needs`,},
-    ],
+    ]
   },
   getters: {
     getServicesCardArray(state) {
@@ -186,7 +187,6 @@ export default createStore({
     }
   },
   mutations: {
-
   },
   actions: {
     scrollToAction(context,data){

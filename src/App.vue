@@ -40,7 +40,7 @@ import testimonialsSection from "./components/testimonialsSection.vue";
 import contactSection from "./components/contactSection.vue";
 import theFooter from "./components/theFooter.vue";
 import { useDisplay } from "vuetify";
-import { computed, provide } from "vue";
+import { computed, provide} from "vue";
 import { useStore  } from "vuex";
 
 const store = useStore();
@@ -48,7 +48,6 @@ const display: any = useDisplay();
 const titleDataArray = store.getters.getTitlesDataArray;
 provide(`display`, display);
 provide(`store`, store);
-
 const mobile = computed(() => {
   return display.width.value < 1000;
 });

@@ -69,6 +69,7 @@ const display: any = inject(`display`);
 const store: any = inject(`store`);
 const anchorList = store.getters.getNavAnchorList;
 const drawer = ref(false);
+
 const desktop = computed(() => {
   return display.width.value < 700;
 });
