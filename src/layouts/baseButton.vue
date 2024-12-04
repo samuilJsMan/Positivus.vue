@@ -10,15 +10,9 @@ import { defineProps,computed } from 'vue';
 const props=defineProps([`color`,`center`])
 
 const color=computed(()=>{
-  if(props.color===`green`){
-    return `bg-green-C `
-  }else if(props.color===`black`){
-    return `bg-black-C`
-  }else if(props.color===`white`){
-    return `bg-white-C`
-  }
-  return ``
+    return props.color
 })
+
 </script>
 
 <style scoped>
@@ -29,17 +23,17 @@ const color=computed(()=>{
     border-radius: 10px;
     padding: 0 20px;
   }
-  .bg-green-C{
+  .green{
     background-color: #B9FF66;
     color:#000000;
   }
 
-  .bg-black-C{
+  .black{
     background-color: #191A23;
     color:#FFFFFF
   }
 
-  .bg-white-C{
+  .white{
     background-color: #FFFFFF;
     color:#000000;
     border: 1px solid #191A23;

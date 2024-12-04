@@ -10,14 +10,14 @@
       >
         <div class="titleSide">
           <div class="photo">
-            <img :src="card.image" alt=""/>
+            <img :src="card.image" :alt="card.alt"/>
           </div>
           <div class="introducrion">
-            <a href="#" class="linkedINlogo">
+            <a href="https://www.linkedin.com/" class="linkedINlogo" target="_blank">
               <img
                 
                 :src="require(`../assets/SocialIcon.png`)"
-                alt=""
+                alt="LinkedIn icon"
               />
             </a>
             <p class="name">{{ card.name }}</p>
@@ -30,7 +30,7 @@
       </baseCard>
     </div>
     <div class="buttonWrapper">
-      <baseButton color="black" :center="false" class="button" ref="button" :style="{minWidth:button}"> See all team </baseButton>
+      <baseButton @click="router.push({path:`/Team`,query:{name:`Team`}})" color="black" :center="false" class="button" ref="button" :style="{minWidth:button}"> See all team </baseButton>
     </div>
   </section>
 </template>
@@ -39,6 +39,7 @@
 import { ref,watch,inject } from "vue";
 const store:any=inject(`store`)
 const display:any=inject(`display`)
+const router:any=inject(`router`)
 const cardData = store.getters.getTeamCardData;
 const wrapper=ref()
 const button=ref()
@@ -56,6 +57,7 @@ watch([display.width,wrapper],()=>{
     button.value=`0`
   }
 })
+
 </script>
 
 <style lang="scss" scoped>

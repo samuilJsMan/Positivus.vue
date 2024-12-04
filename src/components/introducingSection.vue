@@ -6,8 +6,9 @@
     <div class="sectionElement">
       <img
         :src="require(`../assets/introduction.png`)"
-        alt="no photo("
+        alt="Social Media"
       />
+      
     </div>
     <div class="sectionElement">
       <p class="text">
@@ -17,7 +18,7 @@
       </p>
     </div>
     <div class="sectionElement">  
-      <baseButton color="black" :center="computeClass">Book a consultation</baseButton>
+      <baseButton color="black" :center="computeClass" class="button">Book a consultation</baseButton>
     </div>
   </section>
 </template>
@@ -34,10 +35,11 @@ const computeClass = computed(() => {
 
 <style scoped lang="scss">
 .sectionFlex{
-  gap: 2% 4% ;
+  gap: 25px 4% ;
   .sectionElement{
     display: flex;
     align-items: center;
+    min-height: fit-content;
   }
   img {
   object-fit: contain;
@@ -49,12 +51,14 @@ const computeClass = computed(() => {
 .mobileFlex {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   .sectionElement {
     width: 100%;
     .title{
       font-size: 28.666px;
     }
+  }
+  .button{
+    width: 100%;
   }
 }
 

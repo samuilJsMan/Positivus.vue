@@ -4,10 +4,10 @@
       <div class="textSection section">
         <h1>Let’s make things happen</h1>
         <p>Contact us today to learn more about how our digital marketing services can help your business grow and succeed online.</p>
-        <baseButton color="black" style="font-size: 16px;">Get your free proposal</baseButton>
+        <baseButton color="black" style="font-size: 16px;"  @click="sendTo(`contact`)">Get your free proposal</baseButton>
       </div>
-      <div class="imgSection section" v-if="!computeClass">
-        <img :src="require(`../assets/proposal.png`)" alt="">
+      <div class="imgSection section" v-if="!displayFactor">
+        <img :src="require(`../assets/proposal.png`)" alt="Magic">
       </div>
     </baseCard>
   </section>
@@ -17,8 +17,12 @@
 import { computed,inject  } from 'vue'
 
 const display:any=inject(`display`)
+const store:any=inject(`store`)
 
-const computeClass = computed(() => {
+function sendTo(to: string | null) {
+  store.dispatch(`scrollToAction`, to);
+}
+const displayFactor = computed(() => {
   return display.width.value < 700;
 });
 </script>

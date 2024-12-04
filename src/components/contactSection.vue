@@ -3,14 +3,14 @@
     <div class="card">
       <form @submit.prevent class="form">
         <div class="formContainers radio">
-          <label class="container" v-for="n in radioArray" :key="n.value"
-            ><p>{{ n.text }}</p>
+          <label class="container" v-for="button in radioArray" :key="button.value"
+            ><p>{{ button.text }}</p>
             <input
               type="radio"
               name="action"
-              :checked="n.checked"
+              :checked="button.checked"
               class="customInput"
-              :value="n.value"
+              :value="button.value"
               v-model="providedData.action"
             />
             <transition>
@@ -34,7 +34,7 @@
             id="email"
             placeholder="Email"
             v-model="providedData.email.data"
-            @blur="blur(providedData.email, `email`)"
+            @blur="checkValues(providedData.email, `email`)"
             :ref="(el) => (providedData.email.tag = el)"
           />
         </div>
@@ -46,7 +46,7 @@
             placeholder="Message"
             rows="7"
             v-model="providedData.message.data"
-            @blur="blur(providedData.message, `message`)"
+            @blur="checkValues(providedData.message, `message`)"
             :ref="(el) => (providedData.message.tag = el)"
           ></textarea>
         </div>
@@ -54,119 +54,94 @@
           :isPending="isPending"
           :send="send"
           color="black"
-          buttonText="Send Message"
-          v-if="computedWidth"
-        ></pendingButton>
+          v-if="!displayFactor"
+        >
+          Send Message
+        </pendingButton>
       </form>
-      <div class="image" v-if="computedWidth">
-        <img :src="require(`../assets/ContactUsIllustration.png`)" alt="" />
+      <div class="image" v-if="!displayFactor">
+        <img :src="require(`../assets/ContactUsIllustration.png`)" alt="Magic" />
       </div>
 
       <transition>
-        <MiniDialig
-          :values="value"
-          v-if="showDialog"
-        ></miniDialig>
+        <MiniDialog :values="value" v-if="showDialog"></MiniDialog>
       </transition>
     </div>
-    <div v-if="!computedWidth" class="outsideButton">
-      <pendingButton :isPending="isPending" :send="send" color="black" buttonText="Send Message" ></pendingButton>
+    <div v-if="displayFactor" class="outsideButton">
+      <PendingButton :isPending="isPending" :send="send" color="black">
+        Send Message
+      </PendingButton>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
 import { inject, computed, ref, reactive } from "vue";
-import pendingButton from "./pendingButton.vue";
-import MiniDialig from "@/layouts/miniDialig.vue";
 const display: any = inject(`display`);
-const isPending = ref(false);
+const displayFactor = computed(() => {
+  return display.width.value < 700;
+});
+const store: any = inject(`store`);
+const radioArray = [
+  { text: `Say Hi`, value: `greetengs`, checked: true },
+  { text: `Get a Quote`, value: `quote` },
+];
 const providedData = reactive({
   action: `greetengs`,
   name: ``,
   email: { data: ``, valid: false, tag: ref() },
   message: { data: ``, valid: false, tag: ref() },
 });
-
-const radioArray = [
-  { text: `Say Hi`, value: `greetengs`, checked: true },
-  { text: `Get a Quote`, value: `quote` },
-];
-
+const isPending = ref(false);
 const showDialog = ref(false);
-
-const computedWidth = computed(() => {
-  return display.width.value >= 700;
-});
 const value = reactive({ status: ``, text: `` });
 
-function addRed(target: any) {
-  target.valid = false;
-  target.tag.classList.add(`redBorder`);
-}
-
-function removeRed(target: any) {
-  target.valid = true;
-  target.tag.classList.remove(`redBorder`);
-}
-
-function blur(target: any, selector: string) {
-  if (
-    selector === `email` &&
-    target.data.match(
-      /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g /* eslint-disable-line */
-    )
+function checkValues(target: any, selector: string) {
+  if ((selector === `email` &&
+      target.data.match(
+        /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g /* eslint-disable-line */
+      )) ||
+    (selector === `message` && target.data.length >= 10)
   ) {
-    removeRed(target);
-  } else if (selector === `message` && target.data.length >= 10) {
-    removeRed(target);
+    target.valid = true;
+    target.tag.classList.remove(`redBorder`);
   } else {
-    addRed(target);
+    target.valid = false;
+    target.tag.classList.add(`redBorder`);
   }
 }
 
-function send() {
-  blur(providedData.message, `message`)
-  blur(providedData.email, `email`)
+async function send() {
+  checkValues(providedData.message, `message`);
+  checkValues(providedData.email, `email`);
   if (providedData.email.valid && providedData.message.valid) {
-    const object = {
+    isPending.value = true;
+    const returned = await store.dispatch(`sendRequest`, {
       name: providedData.name || null,
       action: providedData.action,
       email: providedData.email.data,
       message: providedData.message.data,
-    };
-    isPending.value = true;
+    });
 
-    fetch(
-      `https://positivus-e2786-default-rtdb.europe-west1.firebasedatabase.app/requests.json`,
-      {
-        method: `POST`,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(object),
-      }
-    )
-      .then((responce) => responce.json())
-      .then(() => {
-        value.status = `Success`;
-        value.text = `Message was sended succesfully`;
-        providedData.action = `greetengs`;
-        providedData.name = ``;
-        providedData.email.data = ``;
-        providedData.email.valid = false;
-        providedData.message.data = ``;
-        providedData.message.valid = false;
-      })
-      .catch(() => {
-        value.status = `Error`;
-        value.text = `Please try send message later`;
-      })
-      .finally(() => {
-        isPending.value = false;
-        showDialog.value = true;
-        setTimeout(() => {
-          showDialog.value = false;
-        }, 2500);
-      });
+    if (returned) {
+      value.status = `Success`;
+      value.text = `Message was sended succesfully`;
+      providedData.action = `greetengs`;
+      providedData.name = ``;
+      providedData.email.data = ``;
+      providedData.email.valid = false;
+      providedData.message.data = ``;
+      providedData.message.valid = false;
+    } else {
+      value.status = `Error`;
+      value.text = `Please try send message later`;
+    }
+
+    isPending.value = false;
+    showDialog.value = true;
+    setTimeout(() => {
+      showDialog.value = false;
+    }, 2500);
   }
 }
 </script>

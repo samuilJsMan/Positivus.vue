@@ -4,14 +4,16 @@
       <div class="progressWrapper" v-if="isPending">
         <v-progress-circular color="white" class="progress" indeterminate></v-progress-circular>
       </div>
-      <span v-else> {{buttonText}} </span>
+      <span v-else> 
+        <slot></slot>  
+      </span>
     </transition>
     </baseButton>
 </template>
 
 <script lang="ts" setup>
 import { defineProps } from "vue";
-defineProps([`isPending`, `send`,`color`,`buttonText`]);
+defineProps([`isPending`, `send`,`color`]);
 </script>
 
 <style lang="scss" scoped>

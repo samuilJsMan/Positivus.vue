@@ -4,13 +4,13 @@
       <div class="scrollableWrapper" ref="container">
         <div class="mainWrapper" ref="scrollableField">
           <div class="innerFlex" v-for="n in 5" :key="n" :id="`${n}`">
-            <dialogBubble>
+            <DialogBubble>
               "We have been working with Positivus for the past year and have
               seen a significant increase in website traffic and leads as a
               result of their efforts. The team is professional, responsive, and
               truly cares about the success of our business. We highly recommend
               Positivus to any company looking to grow their online presence."
-            </dialogBubble>
+            </DialogBubble>
             <div class="description">
               <p class="name">John Smith</p>
               <p class="work">Marketing Director at XYZ Corp</p>
@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-import dialogBubble from "./dialogBubble.vue";
+import DialogBubble from "../layouts/DialogBubble.vue";
 import { ref, watch, onMounted, inject } from "vue";
 const container = ref();
 const scrollableField = ref();

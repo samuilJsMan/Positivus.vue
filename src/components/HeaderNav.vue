@@ -5,16 +5,16 @@
         <div @click="sendTo(`about`)" class="navFlexElement">
           <img
             :src="require(`../assets/Vector.png`)"
-            alt="empty"
+            alt="Positivus Logo"
             class="navLogo"
           />
           <img
             :src="require(`../assets/Positivus.png`)"
-            alt="empty"
+            alt="Positivus Logo"
             class="navLogo"
           />
         </div>
-        <div class="navFlexElement" v-if="!desktop">
+        <div class="navFlexElement" v-if="!displayFactor">
           <baseAnchor
             v-for="anchor in anchorList"
             class="navAnchors"
@@ -40,20 +40,19 @@
       </div>
     </div>
     <transition name="drawer">
-      <navigationDrawer
-        v-if="drawer&&desktop"
+      <NavigationDrawer
+        v-if="drawer&&displayFactor"
         class="drawer"
         @sendToEmit="sendTo"
         @wheel.prevent
         @touchmove.prevent
         @scroll.prevent
-      ></navigationDrawer>
+      ></NavigationDrawer>
     </transition>
     <transition name="backdrop">
       <div
         class="backdrop"
-        @click="sendTo(null)"
-        v-if="drawer&&desktop"
+        v-if="drawer&&displayFactor"
         @wheel.prevent
         @touchmove.prevent
         @scroll.prevent
@@ -64,19 +63,26 @@
 
 <script lang="ts" setup>
 import { computed, inject, ref } from "vue";
-import navigationDrawer from "./navigationDrawer.vue";
+import NavigationDrawer from "./NavigationDrawer.vue";
 const display: any = inject(`display`);
 const store: any = inject(`store`);
+const router:any =inject(`router`)
 const anchorList = store.getters.getNavAnchorList;
 const drawer = ref(false);
 
-const desktop = computed(() => {
+const displayFactor = computed(() => {
   return display.width.value < 700;
 });
 
-function sendTo(to: string | null) {
-  to && store.dispatch(`scrollToAction`, to);
-  drawer.value = false;
+function sendTo(to: string) {
+  if(router.currentRoute.value.path!==`/home`){
+    router.push(`/home`)
+  }
+    drawer.value=false
+    setTimeout(()=>{
+      store.dispatch(`scrollToAction`, to);
+    }) 
+  
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <section v-if="!computeClass">
+  <section v-if="!displayFactor">
     <baseCard styleProp="black" class="flexContainer flexContainerDesktop">
       <div
         class="textElement"
@@ -9,7 +9,7 @@
         <p class="text">
           {{ element.text }}
         </p>
-        <baseAnchor theme="green" :to="element.to" class="anchor">
+        <baseAnchor theme="green" class="anchor" @click="router.push({path:element.to, query:{name:element.theme}})">
           <div class="anchorFlex">
             <p class="learnMore">Learn More</p>
             <img :src="require(`../assets/blackArrowButton.png`)" alt="" />
@@ -47,45 +47,43 @@
 import { computed, ref ,inject} from "vue";
 const store:any=inject(`store`)
 const display:any=inject(`display`)
+const router:any=inject(`router`)
 const swipper = ref();
-const clicked = ref(false);
-const computeClass = computed(() => {
+const elementsArray = store.getters.getSwipperElementsArray
+const displayFactor = computed(() => {
   return display.width.value < 700;
 });
-const elementsArray = store.getters.getSwipperElementsArray
 
+const clicked = ref(false);
 let swipperMoved = 0;
 let clientX = 0;
 let swipperOffset = 0;
 
 function swipe(event: TouchEvent) {
-  if (clicked.value) {
-    clientX=clientX||event.targetTouches[0].clientX
-    swipperOffset = swipperMoved + (event.targetTouches[0].clientX - clientX);
-    swipper.value.style.transform = `translateX(${swipperOffset}px)`;
-  }
+  clientX=clientX||event.targetTouches[0].clientX
+  swipperOffset = swipperMoved + (event.targetTouches[0].clientX - clientX);
+  swipper.value.style.transform = `translateX(${swipperOffset}px)`;
 }
 
 function transition(transitionValue: number, to: boolean) {
   if (Math.abs(transitionValue) < 5 || clicked.value) {
     return;
   }
-  let calcValue = transitionValue * 0.9;
-  let newSwiperOffset = transitionValue - calcValue;
+  let newSwiperOffset = transitionValue - transitionValue * 0.9;
   to ? (swipperOffset -= newSwiperOffset) : (swipperOffset += newSwiperOffset);
   swipper.value.style.transform = `translateX(${swipperOffset}px)`;
   swipperMoved = +swipper.value.style.transform.slice(11, -3);
-  setTimeout(() => transition(calcValue, to), 10);
+  setTimeout(() => transition(transitionValue * 0.9, to), 10);
 }
 
 function touchEnd() {
   clientX = 0;
   clicked.value = false;
   swipperMoved = +swipper.value.style.transform.slice(11, -3);
-  if (swipperOffset > display.width.value-90 || swipperOffset < -1000) {
+  if (swipperOffset >= display.width.value-50 || swipperOffset <= -1050) {
     transition(
-      Math.abs(swipperOffset - (swipperOffset > 0 ? 0 : -1100+display.width.value)),
-      swipperOffset > 300
+      Math.abs(swipperOffset - (swipperOffset > 0 ? 0 : -1105+display.width.value)),
+      swipperOffset > 325
     );
   }
 }

@@ -4,21 +4,23 @@
       v-for="card in servicesCardArray"
       :styleProp="card.style"
       :key="card.name"
-      :class="[`flexCard`, computeClass ? `flexCardMobile` : `flexCardDesktop`]"
+      :class="[`flexCard`, displayFactor ? `flexCardMobile` : `flexCardDesktop`]"
     >
       <div class="title">
         <h1 :style="{ backgroundColor: card.textBack }">
           {{ card.name }}
         </h1>
       </div>
-      <img :src="card.img" alt="" class="image" />
+      <img :src="card.img" :alt="card.alt" class="image" />
       <div class="more">
-        <a href="" class="icon"><img :src="card.arrow" alt=""  /></a>
+        <a @click="router.push({path:card.to, query:{name:card.name}})" :to="card.to" class="icon">
+          <img :src="card.arrow" alt="Arrow" v-ripple />
+        </a>
         <baseAnchor
           class="text"
           :theme="card.style == `black` ? `white` : `black`"
           text="Learn More"
-          :to="card.to"
+          @click="router.push({path:card.to, query:{name:card.name}})"
         ></baseAnchor>
       </div>
     </baseCard>
@@ -29,9 +31,9 @@
 import { computed,inject } from "vue";
 const store:any=inject(`store`)
 const display:any=inject(`display`)
-
+const router:any=inject(`router`)
 const servicesCardArray = store.getters.getServicesCardArray
-const computeClass = computed(() => {
+const displayFactor = computed(() => {
   return display.width.value < 700;
 });
 </script>

@@ -23,10 +23,7 @@ defineProps([`title`]);
 const display:any=inject(`display`)
 
 const computeClass = computed(() => {
-  if (display.width.value < 700) {
-    return true;
-  }
-  return false;
+  return display.width.value < 700
 });
 </script>
 

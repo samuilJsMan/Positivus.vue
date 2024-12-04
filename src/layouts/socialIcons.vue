@@ -1,20 +1,17 @@
 <template>
-  <div class="social">
-    <a href="https://www.facebook.com/" target="_blank">
-      <img :src="require(`../assets/facebookFooter.png`)" alt=""
-    /></a>
-    <a href="https://www.linkedin.com/" target="_blank">
-      <img
-        class="middle"
-        :src="require(`../assets/linkedInFooter.png`)"
-        alt=""
-      />
+  <div class="social"> 
+    <a v-for="logo in logoArray" :href="logo.href" :key="logo.id" target="_blank">
+      <img :src="logo.src" :alt="logo.alt"/>
     </a>
-    <a href="https://x.com/" target="_blank">
-      <img :src="require(`../assets/twitterFooter.png`)" alt=""
-    /></a>
   </div>
+
 </template>
+
+<script lang="ts" setup>
+import {inject} from 'vue'
+const store:any=inject(`store`)
+const logoArray=store.getters.getLogoArray
+</script>
 
 <style lang="scss" scoped>
 .social {
@@ -27,8 +24,11 @@
   img {
     height: 24px;
   }
-  .middle {
-    padding: 0px 10px;
-  }
 }
+
+.social :nth-child(2){
+  img{
+    padding:0 10px;
+  }
+} 
 </style>

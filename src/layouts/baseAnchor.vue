@@ -14,12 +14,8 @@ const props=defineProps([`to`,`theme`,`text`])
 const type=computed(()=>{
   if(props.theme==`green`){
     return `#B9FF66`
-  }else if(props.theme==`white`){
-    return `white`
-  }else if(props.theme==`black`){
-    return `black`
-  }
-  return ``
+  }else
+  return props.theme
 })
 
 </script>

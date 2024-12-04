@@ -2,7 +2,7 @@
   <baseCard
     :styleProp="state ? `white` : `green`"
     class="flexCard"
-    :class="desktop ? `mobileFonts` : `desktopFonts`"
+    :class="displayFactor ? `mobileFonts` : `desktopFonts`"
   >
     <div class="titleBlock">
       <div class="number">0{{ number }}</div>
@@ -10,7 +10,8 @@
         {{ title }}
       </h1>
       <div class="button" @click="state = !state" v-ripple>
-        <p>{{ state ? `+` : ` ̶` }}</p>
+        <p class="plus" v-if="state">+</p>
+        <p class="minus" v-else></p>
       </div>
     </div>
       <div class="textBlock" :style="{height:!state?calculated:0}">
@@ -38,7 +39,7 @@ watch([display.width,textBlockHeight],()=>{
 
 
 const state = ref(true);
-const desktop = computed(() => {
+const displayFactor = computed(() => {
   return display.width.value < 700;
 });
 </script>
@@ -68,11 +69,19 @@ const desktop = computed(() => {
       border-radius: 50%;
       border: 1px solid black;
       justify-content: center;
+      align-items: center;
       align-self: center;
       display: flex;
-      p {
+      .plus {
         font-size: 40px;
         user-select: none;
+      }
+      .minus::after{
+        content:'';
+        height: 3.5px;
+        width: 16px;
+        background-color: black;
+        display: block;
       }
     }
   }

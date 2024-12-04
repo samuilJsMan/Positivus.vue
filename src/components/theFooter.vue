@@ -1,9 +1,9 @@
 <template>
-  <div :class="[`footerWrapper`, { footerWrapperMobile: computedWidth }]">
+  <div :class="[`footerWrapper`, { footerWrapperMobile: displayFactor }]">
     <div class="navBlock">
-      <div class="logo">
-        <img class="first" :src="require(`../assets/Vector.png`)" alt="" />
-        <img class="second" :src="require(`../assets/Positivus.png`)" alt="" />
+      <div class="logo" @click="sendTo(`about`)">
+        <img class="first" :src="require(`../assets/Vector.png`)" alt="Positivus Logo" />
+        <img class="second" :src="require(`../assets/Positivus.png`)" alt="Positivus Logo" />
       </div>
       <div class="navAnchors">
         <baseAnchor
@@ -15,7 +15,7 @@
           @click="sendTo(anchor.to)"
         ></baseAnchor>
       </div>
-      <socialIcons v-if="!computedWidth"></socialIcons>
+      <socialIcons v-if="!displayFactor"></socialIcons>
     </div>
     <div class="contactBlock">
       <div class="adressBlock">
@@ -34,96 +34,88 @@
           placeholder="Email"
           id="email"
           v-model="providedData.value"
-          @blur="blur"
+          @blur="checkValues"
           ref="inputElement"
         />
-        <pendingButton
+        <PendingButton
           :isPending="isPending"
           :send="send"
           color="green"
-          buttonText="Subscribe to news" 
           class="baseButton"
-        ></pendingButton>
+        >
+        Subscribe to news
+      </PendingButton>
       </div>
     </div>
-    <socialIcons v-if="computedWidth"></socialIcons>
+    <SocialIcons v-if="displayFactor"></SocialIcons>
     <div class="legalBlock">
       <div class="year">© 2023 Positivus. All Rights Reserved.</div>
-      <BaseAnchor class="privacy">Privacy Policy</BaseAnchor>
+      <BaseAnchor @click="router.push({path:`/PrivacyPolicy`,query:{name:`Privacy policy`}})" class="privacy">Privacy Policy</BaseAnchor>
     </div>
     <transition>
-      <miniDialig v-if="showDialog" :values="value"></miniDialig>
+      <MiniDialog v-if="showDialog" :values="value"></MiniDialog>
     </transition>
   </div>
 </template>
 
 <script lang="ts" setup>
-import BaseAnchor from "@/layouts/baseAnchor.vue";
-import pendingButton from "./pendingButton.vue";
 import { inject, computed, ref, reactive } from "vue";
-import socialIcons from "@/layouts/socialIcons.vue";
+import SocialIcons from "../layouts/SocialIcons.vue";
 const display: any = inject(`display`);
 const store: any = inject(`store`);
+const router:any =inject(`router`)
 const anchorList = store.getters.getNavAnchorList;
 const showDialog = ref(false);
 const isPending = ref(false);
 const inputElement = ref();
 const value = reactive({ status: ``, text: `` });
 const providedData = reactive({ value: ``, valid: false });
-const computedWidth = computed(() => {
+
+const displayFactor = computed(() => {
   return display.width.value < 700;
 });
 
-function sendTo(to: string | null) {
-  to && store.dispatch(`scrollToAction`, to);
+function sendTo(to: string) {
+  if(router.currentRoute.value.path!==`/home`){
+    router.push(`/home`)
+  }
+  setTimeout(()=>{
+      store.dispatch(`scrollToAction`, to);
+    }) 
 }
 
-function blur() {
-  if (
-    !providedData.value.match(
+function checkValues() {
+  if (providedData.value.match(
       /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g /* eslint-disable-line */
     )
   ) {
-    inputElement.value.style.border = `1px solid red`;
-    providedData.valid = false;
-  } else {
     inputElement.value.style.border = ``;
     providedData.valid = true;
+    
+  } else {
+    inputElement.value.style.border = `1px solid red`;
+    providedData.valid = false;
   }
 }
 
-function send() {
-  blur()
-  console.log(`send`);
+async function send() {
+  checkValues()
   if(providedData.valid){
   isPending.value=true
-  fetch(
-    `https://positivus-e2786-default-rtdb.europe-west1.firebasedatabase.app/requests.json`,
-    {
-      method: `POST`,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(providedData.value),
-    }
-  )
-    .then((responce) => responce.json())
-    .then(() => {
+  const returned = await store.dispatch(`sendRequest`, providedData.value);
+    if(returned){
       value.status = `Success`;
       value.text = `Your Email was Saved`;
       providedData.value = ``;
-    })
-    .catch(() => {
+    }else{
       value.status = `Error`;
       value.text = `Please try send Email later`;
-    })
-    .finally(() => {
-      isPending.value = false;
-      showDialog.value = true;
-      setTimeout(() => {
-        showDialog.value = false;
-      }, 2500);
-    });
-  }else{
-    0
+    }
+    isPending.value = false;
+    showDialog.value = true;
+    setTimeout(() => {
+      showDialog.value = false;
+    }, 2500);
   }
 }
 </script>
@@ -206,6 +198,7 @@ function send() {
         font-size: 15px;
         padding: 10px;
         border: 1px solid white;
+        background-color: white;
         border-radius: 10px;
         height: 45px;
         max-width: 50%;
@@ -229,6 +222,12 @@ function send() {
     }
     .privacy {
       font-size: 12px;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .privacy:hover{
+      text-decoration: underline;
     }
   }
 }

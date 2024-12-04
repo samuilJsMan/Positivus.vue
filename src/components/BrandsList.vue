@@ -1,8 +1,8 @@
 <template>
-  <div :class="[`brandList`,mobile ? `brandListDesktop` : `brandListMobile`]">
-    <div class="spacer" style="width: 14.285%;"></div>
-    <div v-for="n in 6" class="logoWrapper" :key="n">
-      <img class="logo" :src="require(`../assets/Company logo${n}.png`)" alt="" />
+  <div :class="[`brandList`,displayFactor ?  `brandListMobile`: `brandListDesktop`]">
+    <div class="spacer"></div>
+    <div v-for="logo in logoArray" class="logoWrapper" :key="logo.alt">
+      <img class="logo" :src="logo.src" :alt="logo.alt" />
     </div>
   </div>
 </template>
@@ -11,12 +11,14 @@
 import { computed,inject  } from 'vue'
 
 const display:any=inject(`display`)
+const store:any=inject(`store`)
 
-const mobile = computed(() => {
-  if (display.width.value < 700) {
-    return false;
-  }
-  return true;
+const logoArray=computed(()=>{
+  return store.getters.getCompaniesLogo
+})
+
+const displayFactor = computed(() => {
+  return display.width.value < 700
 });
 
 </script>
@@ -27,6 +29,9 @@ const mobile = computed(() => {
   flex-wrap: wrap;
   padding: 0;
   align-items: center;
+  .spacer{
+    width: 14.285%;
+  }
   .logo {
     display: block;
     width: 100px;
