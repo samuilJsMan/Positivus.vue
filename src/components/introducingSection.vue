@@ -18,7 +18,7 @@
       </p>
     </div>
     <div class="sectionElement">  
-      <baseButton color="black" :center="computeClass" class="button">Book a consultation</baseButton>
+      <baseButton color="black" :center="computeClass" class="button" @click="store.dispatch(`scrollToAction`, `contact`)">Book a consultation</baseButton>
     </div>
   </section>
 </template>
@@ -26,6 +26,7 @@
 <script lang="ts" setup>
 import { computed,inject  } from 'vue'
 
+const store:any=inject(`store`)
 const display:any=inject(`display`)
 
 const computeClass = computed(() => {
