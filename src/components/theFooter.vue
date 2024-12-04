@@ -30,8 +30,9 @@
       </div>
       <div class="emailForm">
         <input
-          type="text"
+          type="email"
           placeholder="Email"
+          id="email"
           v-model="providedData.value"
           @blur="blur"
           ref="inputElement"
