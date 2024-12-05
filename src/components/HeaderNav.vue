@@ -76,12 +76,12 @@ const displayFactor = computed(() => {
 
 function sendTo(to: string) {
   if(router.currentRoute.value.path!==`/home`){
-    router.push(`/home`)
+    router.go(-1)
   }
     drawer.value=false
     setTimeout(()=>{
       store.dispatch(`scrollToAction`, to);
-    }) 
+    },10) 
   
 }
 </script>
