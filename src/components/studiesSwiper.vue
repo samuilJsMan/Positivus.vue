@@ -32,7 +32,7 @@
         styleProp="black"
       >
         <p class="text">{{ element.text }}</p>
-        <baseAnchor theme="green" :to="element.to" class="anchor">
+        <baseAnchor theme="green" @click="router.push({path:element.to, query:{name:element.theme}})" class="anchor">
           <div class="anchorFlex">
             <p class="learnMore">Learn More</p>
             <img :src="require(`../assets/blackArrowButton.png`)" alt="" />

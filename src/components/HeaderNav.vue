@@ -53,6 +53,7 @@
       <div
         class="backdrop"
         v-if="drawer&&displayFactor"
+        @click="drawer=false"
         @wheel.prevent
         @touchmove.prevent
         @scroll.prevent
