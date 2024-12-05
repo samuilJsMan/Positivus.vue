@@ -3,8 +3,8 @@ import MainPage from '@/components/MainPage.vue'
 import NotCreatedPage from '@/components/NotCreatedPage.vue'
 const routes: Array<RouteRecordRaw> = [
   //{ path:`/`, redirect:`/home`},
-  { path: '/home', component:MainPage},
-  { path: `/:notFound(.*)`, component:NotCreatedPage, name:`212`}
+  //{ path: '/home', component:MainPage},
+  //{ path: `/:notFound(.*)`, component:NotCreatedPage, name:`212`}
 ]
 
 export default createRouter({
