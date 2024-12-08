@@ -159,38 +159,6 @@ export default createStore({
         description: `During the initial consultation, we will discuss your business goals and objectives, target audience, and current marketing efforts. This will allow us to understand your needs and tailor our services to best fit your requirements.`,
       },
     ],
-    titlesDataArray: [
-      {
-        id: `services`,
-        title: `Services`,
-        text: `At our digital marketing agency, we offer a range of services to helpbusinesses grow and succeed online. These servicesinclude:`,
-      },
-      {
-        id: `cases`,
-        title: `Case Studies`,
-        text: `Explore Real-Life Examples of Our Proven Digital Marketing Success  through Our Case Studies`,
-      },
-      {
-        id: ``,
-        title: `Our Working Process`,
-        text: `Step-by-Step Guide to Achieving Your Business Goals`,
-      },
-      {
-        id: `team`,
-        title: `Team`,
-        text: `Meet the skilled and experienced team behind our successful digital    marketing strategies`,
-      },
-      {
-        id: `blog`,
-        title: `Testimonials`,
-        text: `Hear from Our Satisfied Clients: Read Our Testimonials to Learn More      about Our Digital Marketing Services`,
-      },
-      {
-        id: `contact`,
-        title: `Contact Us`,
-        text: `Connect with Us: Let's Discuss Your Digital Marketing      Needs`,
-      },
-    ],
     logoArray: [
       {
         alt: `FaceBook Logo`,
@@ -212,12 +180,12 @@ export default createStore({
       },
     ],
     companiesLogo:[
-      {src:require(`../assets/Company logo1.png`),alt:`Amazon Logo`},
-      {src:require(`../assets/Company logo2.png`),alt:`Bribble Logo`},
-      {src:require(`../assets/Company logo3.png`),alt:`HubSpot Logo`},
-      {src:require(`../assets/Company logo4.png`),alt:`Notion Logo`},
-      {src:require(`../assets/Company logo5.png`),alt:`Netflix Logo`},
-      {src:require(`../assets/Company logo6.png`),alt:`Zoom Logo`},
+      {href:`https://www.amazon.com/`,src:require(`../assets/Company logo1.png`),alt:`Amazon Logo`},
+      {href:`https://dribbble.com/`,src:require(`../assets/Company logo2.png`),alt:`Bribble Logo`},
+      {href:`https://www.hubspot.com/`,src:require(`../assets/Company logo3.png`),alt:`HubSpot Logo`},
+      {href:`https://www.hubspot.com/`,src:require(`../assets/Company logo4.png`),alt:`Notion Logo`},
+      {href:`https://www.netflix.com/`,src:require(`../assets/Company logo5.png`),alt:`Netflix Logo`},
+      {href:`https://zoom.us/`,src:require(`../assets/Company logo6.png`),alt:`Zoom Logo`},
     ]
   },
   getters: {
@@ -235,9 +203,6 @@ export default createStore({
     },
     getWorkingProccesDataArray(state) {
       return state.workingProccesDataArray;
-    },
-    getTitlesDataArray(state) {
-      return state.titlesDataArray;
     },
     getLogoArray(state){
       return state.logoArray

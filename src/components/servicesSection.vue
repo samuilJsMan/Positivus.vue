@@ -1,107 +1,101 @@
 <template>
-  <section class="flexContainerServices">
-    <baseCard
-      v-for="card in servicesCardArray"
-      :styleProp="card.style"
-      :key="card.name"
-      :class="[`flexCard`, displayFactor ? `flexCardMobile` : `flexCardDesktop`]"
-    >
-      <div class="title">
-        <h1 :style="{ backgroundColor: card.textBack }">
-          {{ card.name }}
-        </h1>
-      </div>
-      <img :src="card.img" :alt="card.alt" class="image" />
-      <div class="more">
-        <a @click="router.push({path:card.to, query:{name:card.name}})" :to="card.to" class="icon">
-          <img :src="card.arrow" alt="Arrow" v-ripple />
+  <section>
+    <SectionHeader
+      title="Services"
+      id="services"
+      text="At our digital marketing agency, we offer a range of services to help
+      businesses grow and succeed online. These servicesinclude:"
+    />
+    <div class="containerServices">
+      <BaseCard
+        v-for="card in servicesCardArray"
+        :styleProp="card.style"
+        :key="card.name"
+        :class="{card:true,mobile:computedDisplayWidth}"
+      >
+        <div class="titleWrapper">
+          <h1 class="title" :style="{ backgroundColor: card.textBack }">
+            {{ card.name }}
+          </h1>
+        </div>
+        <img :src="card.img" :alt="card.alt" class="image" />
+        <a
+          @click="router.push({ path: card.to, query: { name: card.name } })"
+          class="more"
+        >
+          <img class="icon" :src="card.arrow" alt="Arrow" v-ripple />
+          <p
+            class="text"
+            :style="{ color: card.style == `black` ? `white` : `black` }"
+          >
+            Learn More
+          </p>
         </a>
-        <baseAnchor
-          class="text"
-          :theme="card.style == `black` ? `white` : `black`"
-          text="Learn More"
-          @click="router.push({path:card.to, query:{name:card.name}})"
-        ></baseAnchor>
-      </div>
-    </baseCard>
+      </BaseCard>
+    </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { computed,inject } from "vue";
-const store:any=inject(`store`)
-const display:any=inject(`display`)
-const router:any=inject(`router`)
-const servicesCardArray = store.getters.getServicesCardArray
-const displayFactor = computed(() => {
-  return display.width.value < 700;
+import { computed, inject } from "vue";
+const store: any = inject(`store`);
+const displayWidth: any = inject(`displayWidth`);
+const router: any = inject(`router`);
+const servicesCardArray = store.getters.getServicesCardArray;
+const computedDisplayWidth = computed(() => {
+  return displayWidth.value < 700;
 });
 </script>
 
 <style lang="scss" scoped>
-.flexContainerServices {
+.containerServices {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px 20px; 
-  .flexCard{
+  gap: 20px;
+  .card {
+    width: 48%;
     display: grid;
-    min-height: 233px;
-  }
-  .more {
-    display: flex;
-    align-items: center;
-  }
-  h1 {
-    display: inline;
-    font-size: 23px;
-    border-radius: 7px;
-    padding: 5px 9px;
-    box-decoration-break: clone;
-  }
-  .image{
-    aspect-ratio: 5/4;
-  }
-  a{
-    display: flex;
-  }
-}
-
-.flexCardDesktop {
-  grid-template-columns: 1fr 1fr;
-  width: 48%;
-  gap: 4%;
-  .image {
-    width: 100%;
-    grid-row-start: span 2;
-    align-self: center;
-    object-fit: contain;
-  }
-  .more {
-    align-self: end;
-    .icon {
-      padding-right: 10px;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    .more {
+      width: fit-content;
+      display: flex;
+      align-self: end;
+      align-items: center;
+      .icon {
+        padding-right: 10px;
+      }
+      .text {
+        min-width: 72px;
+      }
+    }
+    .title {
+      display: inline;
+      font-size: 23px;
+      border-radius: 7px;
+      padding: 5px 9px;
+      box-decoration-break: clone;
+    }
+    .image {
+      grid-row-start: span 2;
+      width: 100%;
+      justify-self: end;
+      align-self: center;
     }
   }
-}
-
-.flexCardMobile {
-  width: 95%;
-  gap: 4%;
-  .title{
-    grid-column-start: span 2;
-  }
-  .image{
-    order: 1;
-    align-self:flex-end;
-    margin-left: auto;
-    width: 70%;
-  }
-  .text{
-    display: none;
-  }
-  .icon{
-    align-self:flex-end;
+  .mobile {
+    width: 95%;
+    .titleWrapper {
+      grid-column-start: span 2;
+    }
+    .image {
+      grid-row-start: span 1;
+      order: 1;
+    }
+    .text {
+      display: none;
+    }
   }
 }
 </style>

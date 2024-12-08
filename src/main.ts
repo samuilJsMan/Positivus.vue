@@ -12,6 +12,7 @@ import BaseAnchor from './layouts/BaseAnchor.vue'
 import BaseCard from './layouts/BaseCard.vue'
 import MiniDialog from './layouts/MiniDialog.vue'
 import PendingButton from './layouts/PendingButton.vue'
+import SectionHeader from "./layouts/SectionHeader.vue";
 
 loadFonts()
 
@@ -23,5 +24,6 @@ loadFonts()
   .component(`BaseCard`,BaseCard)
   .component(`MiniDialog`,MiniDialog)
   .component(`PendingButton`,PendingButton)
+  .component(`SectionHeader`,SectionHeader)
   .use(vuetify)
   .mount('#app')

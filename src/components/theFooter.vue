@@ -1,35 +1,36 @@
 <template>
-  <div :class="[`footerWrapper`, { footerWrapperMobile: displayFactor }]">
+  <div :class="[`footerWrapper`, { footerWrapperMobile: computedDisplayWidth }]">
     <div class="navBlock">
       <div class="logo" @click="sendTo(`about`)">
         <img class="first" :src="require(`../assets/Vector.png`)" alt="Positivus Logo" />
         <img class="second" :src="require(`../assets/Positivus.png`)" alt="Positivus Logo" />
       </div>
       <div class="navAnchors">
-        <baseAnchor
+        <BaseAnchor
           v-for="anchor in anchorList"
           class="anchor"
           theme="white"
           :text="anchor.text"
           :key="anchor.text"
           @click="sendTo(anchor.to)"
-        ></baseAnchor>
+        />
       </div>
-      <socialIcons v-if="!displayFactor"></socialIcons>
+      <SocialIcons v-if="!computedDisplayWidth"/>
     </div>
     <div class="contactBlock">
       <div class="adressBlock">
         <span class="label">Contact us:</span>
-        <div class="adress">Email: info@positivus.com</div>
-        <div class="adress">Phone: 555-567-8901</div>
-        <div class="adress">
+        <p class="adress">Email: info@positivus.com</p>
+        <p class="adress">Phone: 555-567-8901</p>
+        <p class="adress">
           Address: 1234 Main St
           <br />
           Moonstone City, Stardust State 12345
-        </div>
+        </p>
       </div>
       <div class="emailForm">
         <input
+          class="input"
           type="email"
           placeholder="Email"
           id="email"
@@ -40,20 +41,19 @@
         <PendingButton
           :isPending="isPending"
           :send="send"
+          text="Subscribe to news"
           color="green"
           class="baseButton"
-        >
-        Subscribe to news
-      </PendingButton>
+        />
       </div>
     </div>
-    <SocialIcons v-if="displayFactor"></SocialIcons>
+    <SocialIcons class="socialIcons" v-if="computedDisplayWidth"/>
     <div class="legalBlock">
-      <div class="year">© 2023 Positivus. All Rights Reserved.</div>
-      <BaseAnchor @click="router.push({path:`/PrivacyPolicy`,query:{name:`Privacy policy`}})" class="privacy">Privacy Policy</BaseAnchor>
+      <p class="year">© 2023 Positivus. All Rights Reserved.</p>
+      <BaseAnchor @click="router.push({path:`/PrivacyPolicy`,query:{name:`Privacy policy`}})" class="privacy" text="Privacy Policy"/>
     </div>
     <transition>
-      <MiniDialog v-if="showDialog" :values="value"></MiniDialog>
+      <MiniDialog v-if="showDialog" :values="value"/>
     </transition>
   </div>
 </template>
@@ -61,7 +61,7 @@
 <script lang="ts" setup>
 import { inject, computed, ref, reactive } from "vue";
 import SocialIcons from "../layouts/SocialIcons.vue";
-const display: any = inject(`display`);
+const displayWidth: any = inject(`displayWidth`);
 const store: any = inject(`store`);
 const router:any =inject(`router`)
 const anchorList = store.getters.getNavAnchorList;
@@ -71,8 +71,8 @@ const inputElement = ref();
 const value = reactive({ status: ``, text: `` });
 const providedData = reactive({ value: ``, valid: false });
 
-const displayFactor = computed(() => {
-  return display.width.value < 700;
+const computedDisplayWidth = computed(() => {
+  return displayWidth.value < 700;
 });
 
 function sendTo(to: string) {
@@ -122,15 +122,11 @@ async function send() {
 
 <style lang="scss" scoped>
 .footerWrapper {
-  position: relative;
-  margin-top: 120px;
-  width: 100%;
+  position: relative;  //dialog
   border-radius: 45px 45px 0 0;
   background-color: #191a23;
   padding: 40px;
   color: white;
-  display: flex;
-  flex-direction: column;
   .navBlock {
     display: flex;
     justify-content: space-between;
@@ -139,6 +135,7 @@ async function send() {
       display: flex;
       align-items: center;
       width: fit-content;
+      margin: 0 auto;
       filter: invert(100%);
       .first {
         height: 24px;
@@ -150,11 +147,10 @@ async function send() {
     }
     .navAnchors {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-evenly;
       align-items: center;
-      width: 50%;
-      min-width: 300px;
-      .anchor {
+      width: 100%;
+      .anchor{
         padding: 3px 0;
       }
     }
@@ -164,7 +160,7 @@ async function send() {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    gap: 30px;
     .adressBlock {
       min-width: 222px;
       .label {
@@ -191,14 +187,13 @@ async function send() {
       align-items: center;
       justify-content: center;
       gap: 10px;
-      input {
+      .input {
         display: block;
         color: white;
-        height: 100%;
         font-size: 15px;
         padding: 10px;
         border: 1px solid white;
-        background-color: white;
+        background-color: #292a32;
         border-radius: 10px;
         height: 45px;
         max-width: 50%;
@@ -206,8 +201,6 @@ async function send() {
       .baseButton {
         max-width: 50%;
         height: 45px;
-        padding: 0 ;
-        margin: 0;
       }
     }
   }
@@ -230,15 +223,18 @@ async function send() {
       text-decoration: underline;
     }
   }
+  .socialIcons{
+    margin: 0 auto;
+  }
 }
 
 .footerWrapperMobile {
+  text-align: center;
   padding: 30px 10px 10px 10px;
   border-radius: 0px;
   align-items: center;
   .navBlock {
-    align-items: center;
-    flex-direction: column;
+    display: block;
     .logo {
       padding-bottom: 27px;
     }
@@ -247,19 +243,16 @@ async function send() {
     }
   }
   .contactBlock {
-    align-items: center;
-    text-align: center;
-    flex-direction: column;
+    display: block;
     .emailForm {
-      flex-direction: column;
-      align-items: center;
+      margin-top: 20px;
+      display: block;
       width: 100%;
-      gap:0;
       .baseButton {
         max-width: 100%;
-        margin-top: 13px;
+        margin-top: 15px;
       }
-      input {
+      .input {
         max-width: 100%;
         width: 100%;
         margin: 0;
@@ -269,7 +262,6 @@ async function send() {
   .legalBlock {
     gap: 20px;
     margin-top: 30px;
-    text-align: center;
     flex-direction: column;
   }
 }

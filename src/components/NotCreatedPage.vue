@@ -1,13 +1,13 @@
 <template>
   <div class="mainWrapper">
     <img :src="require(`../assets/Emoji.png`)" alt="">
-    <p class="text">UH OH</p>  
-    <p class="subtext">Look like "{{ queryText }}" 
+    <div class="text">UH OH</div>  
+    <div class="subtext">Look like "{{ queryText }}" 
       <br>
-      part still not created</p>
-    <p class="subtext">Sadly...</p>
-    <p class="subtext">Come back in near future</p>
-    <BaseButton style="font-size: 20px;" color="green" :center="true" @click="router.go(-1)"> Back to Page</BaseButton>
+      part still not created</div>
+    <div class="subtext">Sadly...</div>
+    <div class="subtext">Come back in near future</div>
+    <BaseButton style="font-size: 20px;" color="green" :center="true" @click="router.go(-1)" text="Back to Page"/>
   </div>
 </template>
 
@@ -25,16 +25,18 @@ onMounted(()=>{
 <style lang="scss" scoped>
   .mainWrapper{
     min-height:calc(100vh - 312px);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-  }
-  .text{
-    font-size: 60px;
-  }
-  .subtext{
     text-align: center;
-    font-size:40px 
+    margin-bottom: 2vh;
+    >*{
+      margin-top: 2vh;
+    }
+    .text{
+      font-size: 60px;
+    }
+    .subtext{
+      text-align: center;
+      font-size:40px 
+    }
   }
+  
 </style>

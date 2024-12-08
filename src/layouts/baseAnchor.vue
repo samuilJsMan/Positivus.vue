@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <a :href="to||null" :style="{color:type}">
-      {{ text }}
-      <slot></slot>
-    </a>
-  </div>
+  <a class="anchor" :href="to||null" :style="{color:type}">
+    {{ text }}
+    <slot></slot>
+  </a>
 </template>
 
 <script lang="ts" setup>
@@ -21,11 +19,11 @@ const type=computed(()=>{
 </script>
 
 <style scoped>
-  a{
+  .anchor{
     text-decoration: none;
     cursor: pointer;
   }
-  a:hover{
+  .anchor:hover{
     text-decoration: underline;
   }
 

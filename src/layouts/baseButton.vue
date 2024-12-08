@@ -1,13 +1,14 @@
 <template>
   <button :class="[color,{centerPos:center}]" v-ripple>
-    <slot></slot>  
+    {{ text }} 
+    <slot></slot>
   </button>
 </template>
 
 <script setup lang="ts">
 import { defineProps,computed } from 'vue';
 
-const props=defineProps([`color`,`center`])
+const props=defineProps([`color`,`center`,`text`])
 
 const color=computed(()=>{
     return props.color

@@ -1,49 +1,51 @@
 <template>
   <section>
-    <baseCard class="card" styleProp="white">
-      <div class="textSection section">
-        <h1>Let’s make things happen</h1>
-        <p>Contact us today to learn more about how our digital marketing services can help your business grow and succeed online.</p>
-        <baseButton color="black" style="font-size: 16px;"  @click="sendTo(`contact`)">Get your free proposal</baseButton>
+    <BaseCard class="card" styleProp="white">
+      <div class="textSection">
+        <h1 class="header">Let’s make things happen</h1>
+        <p class="text">Contact us today to learn more about how our digital marketing services can help your business grow and succeed online.</p>
+        <BaseButton :class="[`button`,{buttonMobile:computedDisplayWidth}]" color="black" @click="sendTo(`contact`)" text="Get your free proposal"/>
       </div>
-      <div class="imgSection section" v-if="!displayFactor">
+      <div class="imgSection" v-if="!computedDisplayWidth">
         <img :src="require(`../assets/proposal.png`)" alt="Magic">
       </div>
-    </baseCard>
+    </BaseCard>
   </section>
 </template>
 
 <script lang="ts" setup>
 import { computed,inject  } from 'vue'
 
-const display:any=inject(`display`)
+const displayWidth:any=inject(`displayWidth`)
 const store:any=inject(`store`)
 
 function sendTo(to: string | null) {
   store.dispatch(`scrollToAction`, to);
 }
-const displayFactor = computed(() => {
-  return display.width.value < 700;
+const computedDisplayWidth = computed(() => {
+  return displayWidth.value < 700;
 });
 </script>
 
 <style lang="scss" scoped>
   .card{
-    border: none;
-    box-shadow: none;
+    border: none !important;
+    box-shadow: none !important;
     display: flex;
     gap: 10%;
     .textSection{
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       gap: 25px 0;
-      h1{
+      .header{
         font-size: 23px;
+        margin-bottom: 35px;
       }
-      p{
+      .text{
         font-size: 15px;
+        margin-bottom: 25px;
+      }
+      .button{
+        font-size: 16px;
       }
     }
     .imgSection{
@@ -57,5 +59,8 @@ const displayFactor = computed(() => {
         height: 100%;
       }
     }
+  }
+  .buttonMobile{
+    width: 100%;
   }
 </style>

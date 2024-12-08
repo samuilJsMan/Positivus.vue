@@ -1,32 +1,32 @@
 <template>
-  <section>
-    <baseCard styleProp="black" class="card">
-      <div class="scrollableWrapper" ref="container">
-        <div class="mainWrapper" ref="scrollableField">
-          <div class="innerFlex" v-for="n in 5" :key="n" :id="`${n}`">
-            <DialogBubble>
-              "We have been working with Positivus for the past year and have
-              seen a significant increase in website traffic and leads as a
-              result of their efforts. The team is professional, responsive, and
-              truly cares about the success of our business. We highly recommend
-              Positivus to any company looking to grow their online presence."
-            </DialogBubble>
-            <div class="description">
-              <p class="name">John Smith</p>
-              <p class="work">Marketing Director at XYZ Corp</p>
-            </div>
+  <section ref="container">
+    <SectionHeader
+      title="Testimonials"
+      id="blog"
+      text="Hear from Our Satisfied Clients: Read Our Testimonials to Learn More about Our Digital Marketing Services"
+    />
+    <BaseCard styleProp="black" class="card">
+      <div class="scrollableField" ref="scrollableField">
+        <div v-for="n in 5" :key="n" :id="`${n}`">
+          <DialogBubble>
+            "We have been working with Positivus for the past year and have seen
+            a significant increase in website traffic and leads as a result of
+            their efforts. The team is professional, responsive, and truly cares
+            about the success of our business. We highly recommend Positivus to
+            any company looking to grow their online presence."
+          </DialogBubble>
+          <div class="description">
+            <p class="name">John Smith</p>
+            <p class="work">Marketing Director at XYZ Corp</p>
           </div>
         </div>
       </div>
       <div class="buttonsRow">
-        <div
+        <img
+          :src="require(`../assets/right-arrow.png`)"
           class="left arrow"
           @click="intoView > 0 ? intoView-- : null"
-          v-ripple
-          ref="leftArrow"
-        >
-          <img :src="require(`../assets/right-arrow.png`)" alt="" />
-        </div>
+          ref="leftArrow"/>
         <div class="buttonsItself">
           <div
             v-for="n in 5"
@@ -37,16 +37,13 @@
             ref="button"
           ></div>
         </div>
-        <div
-          class="right arrow"
+        <img
+          :src="require(`../assets/right-arrow.png`)"
+          class="arrow"
           @click="intoView < 4 ? intoView++ : null"
-          v-ripple
-          ref="rightArrow"
-        >
-          <img :src="require(`../assets/right-arrow.png`)" alt="" />
-        </div>
+          ref="rightArrow"/>
       </div>
-    </baseCard>
+    </BaseCard>
   </section>
 </template>
 
@@ -59,14 +56,13 @@ const intoView = ref();
 const leftArrow = ref();
 const rightArrow = ref();
 const button = ref();
-const display: any = inject(`display`);
+const displayWidth: any = inject(`displayWidth`);
 
-watch([intoView, display.width], () => {
+watch([intoView, displayWidth], () => {
   const bubbeWidth = scrollableField.value.children[0].clientWidth;
   const calculation =
-    (bubbeWidth+0.3) * intoView.value +
-    40 * intoView.value +
-    200 -
+    (bubbeWidth + 0.3) * intoView.value +
+    40 * intoView.value -
     container.value.clientWidth / 2 +
     bubbeWidth / 2;
   scrollableField.value.style.left = -calculation + `px`;
@@ -94,51 +90,36 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .card {
-  display: flex;
-  flex-direction: column;
   overflow-x: hidden;
   width: 100%;
-  gap: 60px 0;
   padding: 40px 0 !important;
   box-shadow: none !important;
-  .scrollableWrapper {
-    overflow-x: hidden;
-    .mainWrapper {
-      transition: left 0.3s;
-      position: relative;
-      padding: 0 200px;
-      width: 600%;
-      display: flex;
-      column-gap: 40px;
-      .innerFlex {
-        display: flex;
-        flex-direction: column;
-        row-gap: 40px;
-        .description {
-          padding-left: 70px;
-          .name {
-            color: #b9ff66;
-            font-size: 15px;
-            font-weight: 500;
-          }
-          .work {
-            color: white;
-          }
-        }
+  .scrollableField {
+    transition: left 0.3s;
+    position: relative;
+    width: 500%;
+    display: flex;
+    column-gap: 40px;
+    .description {
+      margin-top: 40px;
+      padding-left: 70px;
+      .name {
+        color: #b9ff66;
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .work {
+        color: white;
       }
     }
   }
   .buttonsRow {
+    margin: 70px auto 0 auto ;
     height: 14px;
-    width: 60%;
+    width: 80%;
     align-self: center;
     display: flex;
     justify-content: space-evenly;
-    .left {
-      img {
-        transform: rotate(180deg);
-      }
-    }
     .buttonsItself {
       display: flex;
       width: 30%;
@@ -149,17 +130,16 @@ onMounted(() => {
       width: 14px;
       height: 14px;
       background-image: url("../assets/sliderButton.png");
-      background-size: cover;
       transition: 0.3s;
     }
     .arrow {
-      display: flex;
       transition: opacity 0.3s;
-      img {
-        align-self: center;
-        height: 20px;
-        filter: invert(100%);
-      }
+      align-self: center;
+      height: 20px;
+      filter: invert(100%);
+    }
+    .left {
+      transform: rotate(180deg);
     }
   }
 }
@@ -167,6 +147,7 @@ onMounted(() => {
 .blocked {
   opacity: 0.3;
 }
+
 .active {
   background-image: url("../assets/sliderButtonActive.png") !important;
 }

@@ -1,19 +1,17 @@
 <template>
-    <baseButton :color="color" center="true" @click="send" class="button">
-      <transition mode="out-in">
+    <BaseButton :color="color" :center="center" @click="send" class="button">
       <div class="progressWrapper" v-if="isPending">
         <v-progress-circular color="white" class="progress" indeterminate></v-progress-circular>
       </div>
       <span v-else> 
-        <slot></slot>  
+        {{text}} 
       </span>
-    </transition>
-    </baseButton>
+    </BaseButton>
 </template>
 
 <script lang="ts" setup>
 import { defineProps } from "vue";
-defineProps([`isPending`, `send`,`color`]);
+defineProps([`isPending`, `send`,`color`,`text`,`center`]);
 </script>
 
 <style lang="scss" scoped>
@@ -29,18 +27,8 @@ defineProps([`isPending`, `send`,`color`]);
 }
 
 .button{
+  padding: 0;
   width: 100%;
 }
 
-.v-enter-from, .v-leave-to{
-  opacity: 1;
-}
-
-.v-enter-to,.v-leave-from{
-  opacity: 0.7;
-}
-
-.progress{
-  width: 100%;
-}
 </style>
