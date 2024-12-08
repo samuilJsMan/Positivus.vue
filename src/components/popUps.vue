@@ -10,8 +10,7 @@
         <p class="minus" v-else></p>
       </div>
     </div>
-    <div class="textBlock" :style="{height:!state?calculated:0}">
-      <br />
+    <div class="textBlock" :style="{height:(!state?calculated:0)+`px`}">
       <div class="description" ref="textBlockHeight">
         {{ description }}
       </div>
@@ -20,22 +19,16 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, ref, computed, inject,watch } from "vue";
+import { defineProps, ref, inject,watch } from "vue";
 
 const displayWidth: any = inject(`displayWidth`);
 const textBlockHeight=ref()
-defineProps([`number`, `title`, `description`]);
-let calculated=ref(``)
-
-watch([displayWidth,textBlockHeight],()=>{
-  calculated.value= 40+textBlockHeight.value.offsetHeight+`px`
-})  
-
-
 const state = ref(true);
-const computedDisplayWidth = computed(() => {
-  return displayWidth.value < 700;
-});
+const calculated=ref(``)
+defineProps([`number`, `title`, `description`]);
+watch([displayWidth,textBlockHeight],()=>{
+  calculated.value=textBlockHeight.value.offsetHeight
+})  
 </script>
 
 <style lang="scss" scoped>
@@ -81,15 +74,13 @@ const computedDisplayWidth = computed(() => {
   }
   .textBlock {
     height: 0px;
-    transition: 0.3s;
-    br {
-      content: "";
+    transition: height 0.3s;
+    .description::before{
+      content: '';
       display: block;
-      height: 40px;
-    }
-    .description {
-      border-top: 1px solid black;
-      padding-top: 25px;
+      border-bottom: 1px solid black;
+      padding-top: 40px;
+      margin-bottom: 25px;
     }
   }
 }

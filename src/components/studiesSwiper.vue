@@ -5,17 +5,27 @@
       id="cases"
       text="Explore Real-Life Examples of Our Proven Digital Marketing Success through Our Case Studies"
     />
-    <div :class="[`cardsContainer`,{cardsContainerDesktop:!computedDisplayWidth}]" ref="swipper">
+    <div
+      :class="[
+        `cardsContainer`,
+        { cardsContainerDesktop: !computedDisplayWidth },
+      ]"
+      ref="swipper"
+    >
       <BaseCard
         class="card"
         v-for="element in elementsArray"
         :key="element"
-        styleProp="black">
+        styleProp="black"
+      >
         <p class="text">{{ element.text }}</p>
         <BaseAnchor
           theme="green"
-          @click="router.push({ path: element.to, query: { name: element.theme } })"
-          class="anchor">
+          @click="
+            router.push({ path: element.to, query: { name: element.theme } })
+          "
+          class="anchor"
+        >
           <span class="learnMore">Learn More</span>
           <img :src="require(`../assets/blackArrowButton.png`)" alt="" />
         </BaseAnchor>
@@ -25,29 +35,31 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, inject } from "vue";
+import { computed, ref, inject} from "vue";
 const store: any = inject(`store`);
-const displayWidth: any = inject(`displayWidth`);
 const router: any = inject(`router`);
+const displayWidth: any = inject(`displayWidth`);
 const swipper = ref();
 const elementsArray = store.getters.getSwipperElementsArray;
+
 const computedDisplayWidth = computed(() => {
   return displayWidth.value < 700;
 });
-
 const clicked = ref(false);
-let swipperMoved = 0;
+let swipperMoved = computedDisplayWidth.value?displayWidth.value / 2 -556.5:0;
 let clientX = 0;
-let swipperOffset = 0;
+let swipperOffset = 0
 
 function swipe(event: TouchEvent) {
-  clientX = clientX || event.targetTouches[0].clientX;
-  swipperOffset = swipperMoved + (event.targetTouches[0].clientX - clientX);
-  swipper.value.style.transform = `translateX(${swipperOffset}px)`;
+  if (computedDisplayWidth.value) {
+    clientX = clientX || event.targetTouches[0].clientX;
+    swipperOffset = swipperMoved + (event.targetTouches[0].clientX - clientX);
+    swipper.value.style.transform = `translateX(${swipperOffset}px)`;
+  }
 }
 
 function transition(transitionValue: number, to: boolean) {
-  if (Math.abs(transitionValue) < 5 || clicked.value) {
+  if (!swipper.value || Math.abs(transitionValue) < 5 || clicked.value) {
     return;
   }
   let newSwiperOffset = transitionValue - transitionValue * 0.9;
@@ -61,10 +73,11 @@ function touchEnd() {
   clientX = 0;
   clicked.value = false;
   swipperMoved = +swipper.value.style.transform.slice(11, -3);
-  if (swipperOffset >= displayWidth.value - 50 || swipperOffset <= -1050) {
+  if (swipperOffset >= displayWidth.value - 50 || swipperOffset <= -1055) {
     transition(
       Math.abs(
-        swipperOffset - (swipperOffset > 0 ? 0 : -1105 + displayWidth.value)
+        swipperOffset -
+          (swipperOffset > 0 ? -4 : -1085 + (displayWidth.value - 14))
       ),
       swipperOffset >= displayWidth.value - 50
     );
@@ -76,7 +89,9 @@ function touchEnd() {
 .cardsContainer {
   gap: 20px;
   display: flex;
+  transform: translateX(calc(50vw - 552px));
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -99,21 +114,25 @@ function touchEnd() {
 }
 
 .cardsContainerDesktop {
-  background-color: #191A23;
+  transform: none !important;
+  background-color: #191a23;
   border-radius: 30px;
   padding: 40px;
   gap: 40px;
-  .card{
+  .card {
     padding: 0;
-    min-width: 0; 
+    min-width: 0;
   }
   .card:nth-child(1) {
     order: 1;
+    width: 100%;
   }
   .card:nth-child(2) {
+    width: 100%;
     order: 3;
   }
   .card:nth-child(3) {
+    width: 100%;
     order: 5;
   }
 }

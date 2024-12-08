@@ -125,7 +125,6 @@ function sendTo(to: string) {
 .drawer-enter-from,
 .drawer-leave-to {
   transform: translateY(-30vh);
-  opacity: 0;
 }
 .drawer-enter-active,
 .drawer-leave-active {
@@ -134,7 +133,6 @@ function sendTo(to: string) {
 .drawer-enter-to,
 .drawer-leave-from {
   transform: translateY(0);
-  opacity: 1;
 }
 
 .backdrop-enter-from,
