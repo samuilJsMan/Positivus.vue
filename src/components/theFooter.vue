@@ -196,10 +196,10 @@ async function send() {
         background-color: #292a32;
         border-radius: 10px;
         height: 45px;
-        max-width: 50%;
+        width: 50%;
       }
       .baseButton {
-        max-width: 50%;
+        width: 50%;
         height: 45px;
       }
     }
@@ -214,6 +214,8 @@ async function send() {
       font-size: 12px;
     }
     .privacy {
+      display: block;
+      width: fit-content;
       font-size: 12px;
       color: white;
       text-decoration: none;
@@ -248,21 +250,20 @@ async function send() {
       margin-top: 20px;
       display: block;
       width: 100%;
-      .baseButton {
-        max-width: 100%;
-        margin-top: 15px;
-      }
       .input {
-        max-width: 100%;
         width: 100%;
-        margin: 0;
+      }
+      .baseButton {
+        width: 100%;
+        margin-top: 15px;
       }
     }
   }
   .legalBlock {
     gap: 20px;
-    margin-top: 30px;
+    margin: 30px 0 15px 0;
     flex-direction: column;
+    align-items: center;
   }
 }
 
