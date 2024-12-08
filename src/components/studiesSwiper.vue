@@ -52,8 +52,8 @@ let swipperOffset = 0
 
 function swipe(event: TouchEvent) {
   if (computedDisplayWidth.value) {
-    clientX = clientX || event.targetTouches[0].clientX;
-    swipperOffset = swipperMoved + (event.targetTouches[0].clientX - clientX);
+    clientX = clientX || event.targetTouches[0].clientX*2;
+    swipperOffset = swipperMoved + ((event.targetTouches[0].clientX*2) - clientX);
     swipper.value.style.transform = `translateX(${swipperOffset}px)`;
   }
 }
